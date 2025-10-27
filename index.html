@@ -1,0 +1,126 @@
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/themes/adaptive.js"></script>
+
+<style>
+    body {
+    margin: 0; /* Add this line */
+    background: var(--highcharts-background-color);
+    color: var(--highcharts-neutral-color-100);
+}
+
+#container {
+    height: 100vh;
+    min-width: 310px;
+}
+
+</style>
+
+<div id="container"></div>
+<script>
+(async () => {
+
+    const names = ['InGame', 'Regular', 'Prio', 'Total'];
+
+    /**
+     * Create the chart when all data is loaded
+     * @return {undefined}
+     */
+    function createChart(series) {
+
+        return Highcharts.stockChart('container', {
+            title: {
+                text: ``
+            },
+            subtitle: {
+                text: 'API: <a href="/current">/current</a> <a href="/all">/all</a> <a href="/regular">/regular</a> <a href="/prio">/prio</a> <a href="/ingame">/ingame</a> <a href="/total">/total</a>'
+            },
+            rangeSelector: {
+                selected: 4
+            },
+            legend: { // <-- ADD THIS BLOCK
+                enabled: true
+            },
+            yAxis: {
+                labels: {
+                    format: '{#if (gt value 0)}{/if}{value}'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 2,
+                    color: 'silver'
+                }]
+            },
+
+            plotOptions: {
+                series: {
+                    showInNavigator: true
+                }
+            },
+
+            tooltip: {
+                pointFormat: '<span style="color:{series.color}">' +
+                    '{series.name}</span>: <b>{point.y}</b>',
+                valueDecimals: 0,
+                split: true
+            },
+
+            series
+        });
+    }
+
+    const series = [];
+    for (const name of names) {
+        const response = await fetch(
+            'all'
+        );
+        const resdata = await response.json();
+
+        let data = getPart(resdata, name)
+        series.push({ name,  data});
+    }
+    function getPart(data, string){
+        return data.map(b => {
+            return [b.time, b[string.toLowerCase()]];
+        });
+    }
+    let title = ''
+    let foundtime = 0
+
+    const chart = createChart(series);
+    await updateTitle()
+    async function updateTitle() {
+        const response = await fetch(
+            'current'
+        );
+        const resdata = await response.json();
+
+
+        foundtime = resdata.time
+        title = `Regular: ${resdata.regular} - Prio: ${resdata.prio} - In-Game: ${resdata.ingame} - Total: ${resdata.total}`
+        let t = Math.floor((new Date() - foundtime)/1000);
+        let time = (t > 60 ? Math.floor(t / 60) +
+            " minute(s) " + (t - Math.floor(t / 60) * 60) + " seconds" : t +
+            " seconds") + " ago" + (Math.floor(t / 60) > 10 ?
+            " (server may be down)" : "");
+        chart.setTitle({
+            text: title + ` - Last Checked: ${time}`
+        })
+    }
+    setInterval(async () => {
+        await updateTitle()
+    }, 5000)
+    setInterval(async () => {
+        let t = Math.floor((new Date() - foundtime)/1000);
+        let time = (t > 60 ? Math.floor(t / 60) +
+            " minute(s) " + (t - Math.floor(t / 60) * 60) + " seconds" : t +
+            " seconds") + " ago" + (Math.floor(t / 60) > 10 ?
+            " (server may be down)" : "");
+        chart.setTitle({
+            text: title+ ` - Last Checked: ${time}`
+        })
+    }, 1000)
+})();
+</script>
