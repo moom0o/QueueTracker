@@ -14,6 +14,7 @@ db.run('PRAGMA journal_mode=DELETE')
 db.run('PRAGMA temp_store=DEFAULT')
 let cacheddb = {}
 
+
 db.all(`SELECT * FROM stats;`, function (err, data) {
     if (err) {
         console.log(err)
@@ -24,7 +25,6 @@ db.all(`SELECT * FROM stats;`, function (err, data) {
 let pingertime = config.PingerTime
 
 const app = express()
-const expport = config.expressport
 
 let current = {}
 
@@ -109,6 +109,4 @@ app.get(`/all`, (req, res) => {
     res.send(cacheddb)
 })
 
-app.listen(expport, () => {
-    console.log(`2b2t queue api listening on port ${expport}`)
-})
+app.listen(config.expressport, config.expressip)

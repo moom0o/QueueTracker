@@ -2,5 +2,6 @@
   "ip": "2b2t.org",
   "port": "25565",
   "PingerTime": 5000,
+  "expressip": "127.0.0.1",
   "expressport": 3000
 }
