@@ -31,6 +31,32 @@
                 text: 'API: <a href="/current">/current</a> <a href="/all">/all</a> <a href="/regular">/regular</a> <a href="/prio">/prio</a> <a href="/ingame">/ingame</a> <a href="/total">/total</a> - <a href="https://github.com/moom0o/QueueTracker">GitHub</a>'
             },
             rangeSelector: {
+                buttons: [
+                    {
+                        type: 'hour',
+                        count: 1,
+                        text: '1h'
+                    },
+                    {
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },
+                    {
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },
+                    {
+                        type: 'day',
+                        count: 30,
+                        text: '30d'
+                    },
+                    {
+                        type: 'all',
+                        text: 'All'
+                    }
+                ],
                 selected: 4
             },
             legend: { // <-- ADD THIS BLOCK
@@ -100,6 +126,16 @@
             " (server may be down)" : "");
         chart.setTitle({
             text: title + ` - ${time}`
+        })
+        names.forEach((name, index) => {
+            const key = name.toLowerCase();
+            const value = resdata[key];
+
+            const isLast = (index === names.length - 1);
+
+            if(value != null){
+                chart.series[index].addPoint([resdata.time, value], isLast, true)
+            }
         })
     }
     setInterval(async () => {
