@@ -25,7 +25,8 @@ db.all(`SELECT * FROM stats;`, function (err, data) {
 let pingertime = config.PingerTime
 
 const app = express()
-
+const path = require('path');
+app.use(express.static(path.join(__dirname, '/')));
 let current = {}
 
 let pingip = config.ip;
@@ -84,9 +85,6 @@ function getPart(string){
         return [b.time, b[string]];
     });
 }
-app.get(`/`, (req, res) => {
-    res.sendFile(__dirname + '/index.html')
-})
 
 app.get(`/ingame`, (req, res) => {
   res.send(getPart("ingame"))

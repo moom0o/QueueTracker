@@ -3,20 +3,10 @@
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
 <script src="https://code.highcharts.com/themes/adaptive.js"></script>
+<title>2b2t Queue Statistics</title>
+<link rel="icon" type="image/png" href="/favicon.png" />
 
-<style>
-    body {
-    margin: 0; /* Add this line */
-    background: var(--highcharts-background-color);
-    color: var(--highcharts-neutral-color-100);
-}
 
-#container {
-    height: 100vh;
-    min-width: 310px;
-}
-
-</style>
 
 <div id="container"></div>
 <script>
@@ -31,6 +21,9 @@
     function createChart(series) {
 
         return Highcharts.stockChart('container', {
+            time: {
+                timezone: 'America/New_York'
+            },
             title: {
                 text: ``
             },
@@ -106,7 +99,7 @@
             " seconds") + " ago" + (Math.floor(t / 60) > 10 ?
             " (server may be down)" : "");
         chart.setTitle({
-            text: title + ` - Last Checked: ${time}`
+            text: title + ` - ${time}`
         })
     }
     setInterval(async () => {
@@ -119,8 +112,26 @@
             " seconds") + " ago" + (Math.floor(t / 60) > 10 ?
             " (server may be down)" : "");
         chart.setTitle({
-            text: title+ ` - Last Checked: ${time}`
+            text: title+ ` - ${time}`
         })
     }, 1000)
 })();
 </script>
+
+<style>
+    body {
+        margin: 0; /* Add this line */
+        background: var(--highcharts-background-color);
+        color: var(--highcharts-neutral-color-100);
+    }
+
+    a:visited {
+        color: #0099ff;
+    }
+
+    #container {
+        height: 100vh;
+        min-width: 310px;
+    }
+
+</style>
