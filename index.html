@@ -49,6 +49,11 @@
                     },
                     {
                         type: 'day',
+                        count: 14,
+                        text: '14d'
+                    },
+                    {
+                        type: 'day',
                         count: 30,
                         text: '30d'
                     },
@@ -57,7 +62,7 @@
                         text: 'All'
                     }
                 ],
-                selected: 4
+                selected: 5
             },
             legend: { // <-- ADD THIS BLOCK
                 enabled: true
@@ -140,7 +145,7 @@
     }
     setInterval(async () => {
         await updateTitle()
-    }, 5000)
+    }, 10000)
     setInterval(async () => {
         let t = Math.floor((new Date() - foundtime)/1000);
         let time = (t > 60 ? Math.floor(t / 60) +
