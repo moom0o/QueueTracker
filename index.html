@@ -94,14 +94,12 @@
             series
         });
     }
-
+    const response = await fetch(
+        'all'
+    );
+    const resdata = await response.json();
     const series = [];
     for (const name of names) {
-        const response = await fetch(
-            'all'
-        );
-        const resdata = await response.json();
-
         let data = getPart(resdata, name)
         series.push({ name,  data});
     }
